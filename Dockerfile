@@ -1,13 +1,21 @@
-FROM openjdk:17-slim
+# OpenJDK images are deprecated → use Eclipse Temurin
+FROM eclipse-temurin:17-jdk-jammy
 
 WORKDIR /app
-# We need to tell the container to render the GUI on your host machine's X server
-# On windows you need to run an X server like VcXsrv or Xming. These allows the GUI from inside the Linuc container to apper on your windows desktop
-# Install GUI libraries required by JavaFX to render graphics
-#Mesa-utils for OpenGL support
-#wget and unzip are used to download and extract the JavaFX SDK
+
+# Install GUI libraries required by JavaFX (X11 + OpenGL)
+# mesa-utils → OpenGL support
+# wget + unzip → download JavaFX SDK
 RUN apt-get update && apt-get install -y \
-    libx11-6 libxext6 libxrender1 libxtst6 libxi6 libgtk-3-0 mesa-utils wget unzip \
+    libx11-6 \
+    libxext6 \
+    libxrender1 \
+    libxtst6 \
+    libxi6 \
+    libgtk-3-0 \
+    mesa-utils \
+    wget \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Download and unzip JavaFX Linux SDK
@@ -17,10 +25,10 @@ RUN mkdir -p /javafx-sdk \
     && mv /javafx-sdk/javafx-sdk-21.0.2/lib /javafx-sdk/lib \
     && rm -rf /javafx-sdk/javafx-sdk-21.0.2 javafx.zip
 
-# Copy your fat JAR
-  COPY target/javafx_with_mariadb-1.0-SNAPSHOT.jar app.jar
- #COPY target/*.jar app.jar
-# Set X11 display (Windows host with Xming/X11)
+# Copy fat JAR
+COPY target/javafx_with_mariadb-1.0-SNAPSHOT.jar app.jar
+
+# X11 display (Windows host using VcXsrv / Xming)
 ENV DISPLAY=host.docker.internal:0.0
 
 # Run JavaFX app
