@@ -1,8 +1,11 @@
 FROM openjdk:17-slim
 
 WORKDIR /app
-
-# Install GUI libraries
+# We need to tell the container to render the GUI on your host machine's X server
+# On windows you need to run an X server like VcXsrv or Xming. These allows the GUI from inside the Linuc container to apper on your windows desktop
+# Install GUI libraries required by JavaFX to render graphics
+#Mesa-utils for OpenGL support
+#wget and unzip are used to download and extract the JavaFX SDK
 RUN apt-get update && apt-get install -y \
     libx11-6 libxext6 libxrender1 libxtst6 libxi6 libgtk-3-0 mesa-utils wget unzip \
     && rm -rf /var/lib/apt/lists/*

@@ -26,7 +26,7 @@ public class Main extends Application {
                 Double.parseDouble(celsiusField.getText()), fahrenheit, resultLabel));
 
         VBox root = new VBox(10, celsiusField, convertButton, resultLabel, saveButton);
-        Scene scene = new Scene(root, 300, 200);
+        Scene scene = new Scene(root, 200, 150);
 
         stage.setTitle("Celsius to Fahrenheit");
         stage.setScene(scene);
@@ -36,7 +36,8 @@ public class Main extends Application {
     private void convertTemperature() {
         try {
             double celsius = Double.parseDouble(celsiusField.getText());
-            fahrenheit = (celsius * 9 / 5) + 32;
+            fahrenheit = TemperatureUtil.celsiusToFahrenheit(celsius);
+
             resultLabel.setText(String.format("Fahrenheit: %.2f", fahrenheit));
         } catch (NumberFormatException ex) {
             resultLabel.setText("Invalid input!");
