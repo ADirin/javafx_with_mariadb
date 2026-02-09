@@ -64,15 +64,17 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image to Docker Hub') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', env.DOCKERHUB_CREDENTIALS_ID) {
-                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
-                    }
-                }
-            }
-        }
+       stage('Push Docker Image to Docker Hub') {
+           steps {
+               withCredentials([string(credentialsId: 'dockerhub-password', variable: 'DOCKER_PASS')]) {
+                   bat """
+                   docker login -u amirdirin --password-stdin <<< %DOCKER_PASS%
+                   docker push amirdirin/javafx_with_db3_2026:latest
+                   """
+               }
+           }
+       }
+
     }
 
   post {
