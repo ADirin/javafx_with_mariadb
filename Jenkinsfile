@@ -64,17 +64,6 @@ pipeline {
             }
         }
 
-       stage('Push Docker Image to Docker Hub') {
-           steps {
-               withCredentials([string(credentialsId: 'dockerhub-password', variable: 'DOCKER_PASS')]) {
-                   bat """
-                   echo %DOCKER_PASS% | docker login -u amirdirin --password-stdin
-                   docker push amirdirin/javafx_with_db3_2026:latest
-                   """
-               }
-           }
-       }
-
 
     }
 
